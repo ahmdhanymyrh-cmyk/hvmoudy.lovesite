@@ -1,0 +1,140 @@
+<!doctype html>
+
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>موقع حب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #ffe6f0;
+      --bg2: #ffd1e6;
+      --card-bg: rgba(255,255,255,0.95);
+      --accent: #ff4571;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Cairo',sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));}
+    .hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+    .hearts i{position:absolute;width:18px;height:18px;background:var(--accent);transform:rotate(45deg);border-radius:3px;opacity:0.9}
+    .hearts i:before,.hearts i:after{content:'';position:absolute;width:18px;height:18px;background:var(--accent);border-radius:50%}
+    .hearts i:before{top:-9px;left:0}
+    .hearts i:after{left:9px;top:0}
+    @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-120vh) scale(1.6);opacity:0}}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:30px}
+    .card{width:100%;max-width:520px;background:var(--card-bg);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.12);padding:36px;text-align:center;position:relative}
+    .title{font-size:22px;margin-bottom:8px;color:#7a1333;font-weight:700}
+    .subtitle{color:#aa3a5a;margin-bottom:20px}
+    .message{font-size:28px;font-weight:600;color:#3b0b1b;min-height:86px;display:flex;align-items:center;justify-content:center;padding:12px}
+    .controls{margin-top:22px;display:flex;gap:12px;justify-content:center}
+    .btn{border:0;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--accent),#ff6a99);color:white}
+    .btn.secondary{background:transparent;color:var(--accent);border:2px solid rgba(255,69,113,0.16)}
+    footer{margin-top:18px;color:#7a1333;font-size:13px}
+    .overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.45));display:flex;align-items:center;justify-content:center;padding:20px;z-index:100}
+    .login{width:100%;max-width:420px;background:var(--glass);backdrop-filter:blur(6px);border-radius:14px;padding:28px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.25)}
+    .login h2{margin:0 0 10px;font-size:20px;color:#3b0b1b}
+    .login p{margin:0 0 18px;color:#4b1b2b}
+    .pass{width:100%;padding:12px;border-radius:10px;border:2px solid rgba(255,255,255,0.6);font-size:16px}
+    .err{color:#7a0000;margin-top:10px;display:none}
+    @media (max-width:520px){.message{font-size:22px;padding:8px}}
+  </style>
+</head>
+<body>
+  <div class="hearts" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="card" role="main">
+      <div class="title">موقع حب</div>
+      <div class="subtitle">رسائل حب جميلة وبسيطة</div>
+      <div id="message" class="message">I Love You</div>
+      <div class="controls">
+        <button id="newMsg" class="btn">رسالة جديدة ❤️</button>
+        <button id="copyBtn" class="btn secondary">نسخ الرسالة</button>
+      </div>
+      <footer>صمّمه لك صاحبي — لو عايز تعديلات قولي</footer>
+    </div>
+  </div>
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true">
+    <div class="login">
+      <h2>أدخل كلمة المرور</h2>
+      <p>لو سمحت ادخل كلمة المرور لفتح الموقع</p>
+      <input id="passwordInput" class="pass" type="password" placeholder="كلمة المرور" aria-label="كلمة المرور" />
+      <div style="height:12px"></div>
+      <button id="unlockBtn" class="btn">افتح</button>
+      <div id="errMsg" class="err">كلمة المرور خاطئة. حاول مرة أخرى.</div>
+      <div style="height:6px"></div>
+      <p style="font-size:12px;color:#5a1a2a;margin-top:8px">ملاحظة: كلمة المرور هي <strong>Love</strong></p>
+    </div>
+  </div>
+  <script>
+    const correctPassword = 'Love';
+    const overlay = document.getElementById('overlay');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const passInput = document.getElementById('passwordInput');
+    const errMsg = document.getElementById('errMsg');function unlock(){
+  const v = passInput.value;
+  if(v === correctPassword){
+    overlay.style.display = 'none';
+  } else {
+    errMsg.style.display = 'block';
+    passInput.classList.add('shake');
+    setTimeout(()=>passInput.classList.remove('shake'),500);
+  }
+}
+
+unlockBtn.addEventListener('click', unlock);
+passInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') unlock(); });
+
+// --- love messages ---
+const messages = [
+  'أنتِ نبض قلبي وسرّ سعادتي.',
+  'أحبك أكثر من كلّ الكلام، وأكثر من كلّ الصمت.',
+  'وجودك معي يجعل كلّ شيء جميلًا.',
+  'يا قمراً أضاء أيامي، أحبك بلا حدود.',
+  'أنام وأحلم بك، وأستيقظ لأحبك أكثر.',
+  'أنتِ قلبي الذي نبض بعد أن أصبح العالم مظلمًا.',
+  'كل لحظة معك قصة حب جديدة.',
+  'أنتِ لحن الحياة الذي لا ينتهي.'
+];
+
+const msgEl = document.getElementById('message');
+const newBtn = document.getElementById('newMsg');
+const copyBtn = document.getElementById('copyBtn');
+
+newBtn.addEventListener('click', ()=>{
+  const idx = Math.floor(Math.random()*messages.length);
+  msgEl.textContent = messages[idx];
+});
+
+copyBtn.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(msgEl.textContent);
+    copyBtn.textContent = 'تم النسخ!';
+    setTimeout(()=>copyBtn.textContent = 'نسخ الرسالة',1500);
+  }catch(e){
+    alert('فشل النسخ — استخدم النسخ اليدوي');
+  }
+});
+
+// --- floating hearts generator ---
+const heartsContainer = document.querySelector('.hearts');
+function makeHeart(){
+  const i = document.createElement('i');
+  const size = 12 + Math.random()*28;
+  i.style.width = size + 'px';
+  i.style.height = size + 'px';
+  i.style.left = Math.random()*100 + '%';
+  const delay = Math.random()*2;
+  const dur = 6 + Math.random()*8;
+  i.style.bottom = '-20px';
+  i.style.opacity = 0.9;
+  i.style.transform = 'rotate(45deg)';
+  i.style.animation = `floatUp ${dur}s linear ${delay}s forwards`;
+  heartsContainer.appendChild(i);
+  setTimeout(()=>{ i.remove(); }, (delay+dur)*1000 + 500);
+}
+setInterval(makeHeart, 700);
+
+  </script>
+</body>
+</html>
